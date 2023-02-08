@@ -1,9 +1,9 @@
-package com.example.restautomatique;
+package com.example.restautomatique.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class HelloController {
+public class RestauController {
     @FXML
     private Label welcomeText;
 
