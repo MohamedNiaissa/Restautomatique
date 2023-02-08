@@ -35,6 +35,7 @@
             <Button fx:id="btnAdd" layoutX="68.0" layoutY="398.0" mnemonicParsing="false" text="Ajouter" />
             <TextField fx:id="fieldAge" layoutX="21.0" layoutY="199.0" />
             <Label layoutX="23.0" layoutY="176.0" text="Age" />
+            <Button fx:id="btnDelete" layoutX="31.0" layoutY="492.0" mnemonicParsing="false" text="Supprimer l'employé" />
          </children>
       </Pane>
    </children>

@@ -13,8 +13,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class RestauController implements Initializable {
-    @FXML
-    private Label welcomeText;
 
     @FXML
     private HBox employeApp;
@@ -30,11 +28,6 @@ public class RestauController implements Initializable {
 
     @FXML
     private HBox h;
-
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
-    }
 
 
     @Override

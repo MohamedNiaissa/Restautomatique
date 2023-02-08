@@ -5,10 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 
@@ -49,8 +46,16 @@ public class EmployeController implements Initializable {
     @FXML
     private Button btnAdd;
 
+    @FXML
+    private Button btnDelete;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+         ObservableList<Employe> employeesModels = FXCollections.observableArrayList(
+                new Employe ("moi",12, "Chepchieng", 2),
+                new Employe("mm",2, "Too", 3)
+        );
 
         columnName.setCellValueFactory(new PropertyValueFactory<Employe, String>("name"));
         columnAge.setCellValueFactory(new PropertyValueFactory<Employe, String>("age"));
@@ -75,10 +80,13 @@ public class EmployeController implements Initializable {
                 employeesModels.add(new_employe);
             }
         });
+
+        btnDelete.setOnMousePressed(actionEvent -> {
+            TablePosition selectCellSupr = tableEmployee.getSelectionModel().getSelectedCells().get(0);
+            employeesModels.remove(selectCellSupr.getRow());
+        });
+
     }
 
-    private ObservableList<Employe> employeesModels = FXCollections.observableArrayList(
-            new Employe ("moi",12, "Chepchieng", 2),
-            new Employe("mm",2, "Too", 3)
-    );
+
 }
