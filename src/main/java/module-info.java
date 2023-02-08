@@ -1,6 +1,7 @@
 module com.example.restautomatique {
     requires javafx.controls;
     requires javafx.fxml;
+    requires org.json;
 
 
     opens com.example.restautomatique to javafx.fxml;
