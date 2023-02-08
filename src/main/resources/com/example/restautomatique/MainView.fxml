@@ -38,7 +38,6 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -48,7 +47,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.restautomatique.controller.RestauController">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.restautomatique.controller.RestauController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -89,9 +88,9 @@
         </Menu>
       </menus>
     </MenuBar>
-    <SplitPane dividerPositions="0.2505567928730512, 0.7505567928730512" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <SplitPane focusTraversable="true" prefHeight="553.0" prefWidth="686.0" VBox.vgrow="ALWAYS">
       <items>
-        <AnchorPane prefHeight="551.0" prefWidth="144.0">
+        <AnchorPane prefHeight="551.0" prefWidth="326.0">
           <children>
                   <Button fx:id="btnPlats" layoutX="64.0" layoutY="60.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="95.0" text="Plats" />
                   <Button fx:id="btnCommandes" layoutX="64.0" layoutY="157.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="95.0" text="Commandes" />
@@ -100,12 +99,6 @@
                   <Button fx:id="btnFinance" layoutX="64.0" layoutY="471.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="95.0" text="Finance" />
           </children>
         </AnchorPane>
-        <ScrollPane prefHeight="-1.0" prefWidth="-1.0">
-          <content>
-            <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="545.0" prefWidth="452.0" />
-          </content>
-        </ScrollPane>
-        <AnchorPane />
       </items>
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
