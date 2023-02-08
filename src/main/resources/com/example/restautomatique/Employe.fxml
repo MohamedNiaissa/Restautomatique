@@ -9,29 +9,32 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.restautomatique.controller.EmployeController">
    <children>
       <ScrollPane prefHeight="400.0" prefWidth="400.0">
          <content>
-            <TableView prefHeight="545.0" prefWidth="397.0">
+            <TableView fx:id="tableEmployee" prefHeight="545.0" prefWidth="397.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
+                  <TableColumn fx:id="columnName" prefWidth="105.0" text="Nom" />
+                  <TableColumn fx:id="columnAge" prefWidth="85.0" text="Age" />
+                <TableColumn fx:id="columnJob" minWidth="4.0" prefWidth="102.0" text="Poste" />
+                <TableColumn fx:id="columnWorkHours" prefWidth="100.0" text="Heures travaillés" />
               </columns>
             </TableView>
          </content>
       </ScrollPane>
       <Pane prefHeight="200.0" prefWidth="200.0">
          <children>
-            <TextField layoutX="21.0" layoutY="167.0" />
+            <TextField fx:id="filedName" layoutX="21.0" layoutY="137.0" />
             <Label layoutX="45.0" layoutY="46.0" text="Ajouter un employé" />
-            <Label layoutX="23.0" layoutY="144.0" text="Nom" />
-            <Label layoutX="21.0" layoutY="219.0" text="Poste" />
-            <TextField layoutX="19.0" layoutY="241.0" />
-            <TextField layoutX="20.0" layoutY="315.0" />
-            <Label layoutX="20.0" layoutY="293.0" text="Heures travaillés" />
-            <Button layoutX="68.0" layoutY="392.0" mnemonicParsing="false" text="Ajouter" />
+            <Label layoutX="23.0" layoutY="113.0" text="Nom" />
+            <Label layoutX="21.0" layoutY="248.0" text="Poste" />
+            <TextField fx:id="fieldJob" layoutX="19.0" layoutY="271.0" />
+            <TextField fx:id="fieldWorkHours" layoutX="20.0" layoutY="345.0" />
+            <Label layoutX="20.0" layoutY="319.0" text="Heures travaillés" />
+            <Button fx:id="btnAdd" layoutX="68.0" layoutY="398.0" mnemonicParsing="false" text="Ajouter" />
+            <TextField fx:id="fieldAge" layoutX="21.0" layoutY="199.0" />
+            <Label layoutX="23.0" layoutY="176.0" text="Age" />
          </children>
       </Pane>
    </children>
