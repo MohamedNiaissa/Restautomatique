@@ -56,8 +56,24 @@ public class PlatController implements Initializable {
 
         addPlatButton.setOnMousePressed( e -> {
            Plat plat = new Plat(nameNew.getText(), descrNew.getText(), Integer.parseInt(sellNew.getText()), Integer.parseInt(preparedNew.getText()), pictureNew.getText(), ingredientNew.getText());
+            nameNew.clear();
+            descrNew.clear();
+            sellNew.clear();
+            preparedNew.clear();
+            ingredientNew.clear();
+            pictureNew.clear();
             plats.add(plat);
             });
+
+        dishTab.setOnMousePressed( e -> {
+            TablePosition selectCell = dishTab.getSelectionModel().getSelectedCells().get(0);
+            nameNew.setText(plats.get(selectCell.getRow()).getName());
+            descrNew.setText(plats.get(selectCell.getRow()).getDescription());
+            sellNew.setText(plats.get(selectCell.getRow()).getSellPrice()+"");
+            preparedNew.setText(plats.get(selectCell.getRow()).getPreparationPrice()+"");
+            ingredientNew.setText(plats.get(selectCell.getRow()).getIngredient());
+            pictureNew.setText(plats.get(selectCell.getRow()).getPicture());
+        });
 
         delPlatButton.setOnMousePressed( e -> {
             TablePosition selectCellSupr = dishTab.getSelectionModel().getSelectedCells().get(0);
