@@ -66,9 +66,8 @@ public class CommandeController implements Initializable {
         ArrayList<Plat> plats = new ArrayList<Plat>();
 
         ArrayList<String> ingredients = new ArrayList<String>();
-        ingredients.add("ing1"); ingredients.add("ing2");
 
-        Plat plat1 = new Plat("pates", "jsp", 10, 8, "non", ingredients);
+        Plat plat1 = new Plat("pates", "jsp", 10, 8, "non", "ingredients");
         plats.add(plat1);
 
         Table table = new Table("grande","arriere");

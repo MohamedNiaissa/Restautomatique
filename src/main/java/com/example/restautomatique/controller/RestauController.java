@@ -20,30 +20,38 @@ public class RestauController implements Initializable {
     private HBox employeApp;
     @FXML
     private HBox financeApp;
-
+    @FXML
+    private HBox dishsApp;
     @FXML
     private Button btnCommandes;
     @FXML
     private Button btnEmployes;
     @FXML
     private Button btnFinance;
-    
+
     @FXML
     private SplitPane splitpane;
+
+    @FXML
+    private Button btnPlats;
 
     @FXML
     private VBox mainApp;
 
     public void clear(){
+        splitpane.getItems().remove(dishsApp);
         splitpane.getItems().remove(employeApp);
         splitpane.getItems().remove(financeApp);
         splitpane.getItems().remove(commandeApp);
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         clear();
 
+        btnPlats.setOnMousePressed(actionEvent -> {
+            clear();
+            splitpane.getItems().add(dishsApp);
+        });
         btnCommandes.setOnMousePressed( actionEvent -> {
             clear();
             splitpane.getItems().add(commandeApp);
