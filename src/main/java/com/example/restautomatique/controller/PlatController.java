@@ -7,8 +7,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 public class PlatController implements Initializable {
@@ -55,11 +62,63 @@ public class PlatController implements Initializable {
         pictureColumn.setCellValueFactory(new PropertyValueFactory<>("picture"));
         dishTab.setItems(plats);
 
+        String path = "src/main/resources/com/example/restautomatique/Fichiers_JSON/";
+
+        //On récupère le fichier JSON actuel et on le stocke (si il existe)
+        String jsonPlats = "[]";
+        try {
+            jsonPlats = new String(Files.readAllBytes(Paths.get(path + "plat.json")));
+        } catch (IOException e) {
+            System.out.println("Fichier JSON n'existe pas encore. Création du fichier...");
+        }
+        //On ajoute les valeurs du JSON à l'observable list
+        JSONArray arrayPlats = new JSONArray(jsonPlats);
+        for (int i = 0; i < arrayPlats.length(); i++) {
+            JSONObject objetPlats = arrayPlats.getJSONObject(i);
+            Plat plat = new Plat(
+                    objetPlats.getString("name"),
+                    objetPlats.getString("description"),
+                    objetPlats.getInt("sellPrice"),
+                    objetPlats.getInt("preparationPrice"),
+                    objetPlats.getString("ingredient"),
+                    objetPlats.getString("picture")
+            );
+            plats.add(plat);
+        }
+
         /* Ajoute une instance de Plat a la liste plats*/
         addPlatButton.setOnMousePressed( e -> {
-           Plat plat = new Plat(nameNew.getText(), descrNew.getText(), Integer.parseInt(sellNew.getText()), Integer.parseInt(preparedNew.getText()), pictureNew.getText(), ingredientNew.getText());
+            String name = nameNew.getText();
+            String description = descrNew.getText();
+            Integer sell = Integer.parseInt(sellNew.getText());
+            Integer preparation = Integer.parseInt(preparedNew.getText());
+            String picture = pictureNew.getText();
+            String ingredient = ingredientNew.getText();
+           Plat plat = new Plat(
+                   name,
+                   description,
+                   sell,
+                   preparation,
+                   picture,
+                   ingredient);
             clearForm();
             plats.add(plat);
+            //On crée un objet Json
+            JSONObject platJson = new JSONObject();
+            platJson.put("name",name);
+            platJson.put("description",description);
+            platJson.put("sellPrice", sell);
+            platJson.put("preparationPrice",preparation);
+            platJson.put("picture",picture);
+            platJson.put("ingredient",ingredient);
+
+            //On réutilise l'array Json à partir de ce qui existe déjà avec le nouvel objet, et on crée/update le fichier
+            arrayPlats.put(platJson);
+            try (PrintWriter out = new PrintWriter(new FileWriter(path+"plat.json"))) {
+                out.write(arrayPlats.toString());
+            } catch (Exception ex) {
+                System.out.println("Echec: pas de mise à jour du JSON.");
+            }
             });
 
         /* Remplis les champs du formulaires avec les informations du Plat sélectionné dans le tableau dishTab*/
@@ -77,6 +136,12 @@ public class PlatController implements Initializable {
         delPlatButton.setOnMousePressed( e -> {
             TablePosition selectCellSupr = dishTab.getSelectionModel().getSelectedCells().get(0);
             plats.remove(selectCellSupr.getRow());
+            arrayPlats.remove(selectCellSupr.getRow());
+            try (PrintWriter out = new PrintWriter(new FileWriter(path+"plat.json"))) {
+                out.write(arrayPlats.toString());
+            } catch (Exception ex) {
+                System.out.println("Echec: ligne non supprimée.");
+            }
             clearForm();
         });
     }
