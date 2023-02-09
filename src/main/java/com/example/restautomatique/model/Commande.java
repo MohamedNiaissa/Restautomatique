@@ -1,25 +1,31 @@
 package com.example.restautomatique.model;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Commande {
-    private ArrayList<Plat> meal;
+    private ArrayList<Plat> plat;
     private Table table;
-    private LocalDateTime creationDate;
+    private String creationDate;
 
-    public Commande(ArrayList<Plat> meal, Table table) {
-        this.meal = meal;
+    public Commande(ArrayList<Plat> plat, Table table, String creationDate) {
+        this.plat = plat;
         this.table = table;
-        this.creationDate = LocalDateTime.now();
+        if(creationDate == ""){
+            this.creationDate = LocalDateTime.now().toString();
+        }else{
+            this.creationDate = creationDate;
+        }
     }
 
-    public ArrayList<Plat> getMeal() {
-        return meal;
+    public ArrayList<Plat> getPlat() {
+        return plat;
     }
 
-    public void setMeal(ArrayList<Plat> meal) {
-        this.meal = meal;
+    public void setPlat(ArrayList<Plat> plat) {
+        this.plat = plat;
     }
 
     public Table getTable() {
@@ -30,18 +36,18 @@ public class Commande {
         this.table = table;
     }
 
-    public LocalDateTime getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
     }
 
     @Override
     public String toString() {
         return "Commande{" +
-                "meal=" + meal +
+                "plats=" + plat +
                 ", table=" + table +
                 ", creationDate=" + creationDate +
                 '}';
