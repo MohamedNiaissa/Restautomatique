@@ -29,6 +29,7 @@ public class FinancialReportController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+
         Integer i = 3;
         int e = 7;
 

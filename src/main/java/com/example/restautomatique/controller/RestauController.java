@@ -1,6 +1,6 @@
 package com.example.restautomatique.controller;
 
-import com.example.restautomatique.model.Employe;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class RestauController implements Initializable {
+public class RestauController extends Thread  implements Initializable {
 
     @FXML
     private HBox commandeApp;
@@ -44,6 +44,9 @@ public class RestauController implements Initializable {
     @FXML
     private VBox mainApp;
 
+    public int[] time = {25,0};
+
+
     public void clear(){
         splitpane.getItems().remove(dishsApp);
         splitpane.getItems().remove(employeApp);
@@ -51,6 +54,9 @@ public class RestauController implements Initializable {
         splitpane.getItems().remove(commandeApp);
         splitpane.getItems().remove(tablesApp);
     }
+    @FXML
+    private Label chrono;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         clear();
@@ -75,5 +81,46 @@ public class RestauController implements Initializable {
             clear();
             splitpane.getItems().add(tablesApp);
         });
+
+        new Thread(() -> {
+            while (true) {
+                Platform.runLater(() -> {
+                 chrono.setText(Integer.toString(time[0]) + " : " + Integer.toString(time[1]));
+                });
+
+                if(time[0] == 15 && time[1] == 0) {
+                    Platform.runLater(() -> {
+                        splitpane.getItems().remove(commandeApp);
+                        btnCommandes.setDisable(true);
+                    });
+                }
+                if (time[0] == 0 && time[1] == 0) {
+                    break;
+                }
+                else if (time[1] == 0) {
+                    time[1] = 59;
+                    time[0]--;
+                }
+                time[1]--;
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    System.out.println(e);
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
+
     }
-}
+
+
+        public Label getChrono () {
+            return chrono;
+        }
+
+        public void changeChrono (String chronoTime){
+            chrono.setText(chronoTime);
+        }
+    }
+
