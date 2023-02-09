@@ -69,7 +69,6 @@
             <fx:include fx:id="employeApp" source="Employe.fxml" />
             <fx:include source="FinancialReport.fxml" />
       </items>
-      <fx:include fx:id="menubar" source="Employe.fxml" />
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
       <children>
