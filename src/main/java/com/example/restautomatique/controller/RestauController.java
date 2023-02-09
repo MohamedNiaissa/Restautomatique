@@ -19,6 +19,9 @@ public class RestauController extends Thread  implements Initializable {
 
     @FXML
     private Button btnEmployes;
+
+    @FXML
+    private Button btnCommandes;
     
     @FXML
     private SplitPane splitpane;
@@ -29,7 +32,6 @@ public class RestauController extends Thread  implements Initializable {
     @FXML
     private Label chrono;
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         splitpane.getItems().remove(employeApp);
@@ -38,24 +40,36 @@ public class RestauController extends Thread  implements Initializable {
             splitpane.getItems().add(employeApp);
         });
 
+        int[] value = {25,0};
         new Thread(() -> {
-            int value;
-            for (int i = 30; i >=  0 ; i--) {
-                System.out.println(i);
-                chrono.getText();
-                chrono.setText(Integer.toString(i));
+            while (true) {
+                Platform.runLater(() -> {
+                 chrono.setText(Integer.toString(value[0]) + " : " + Integer.toString(value[1]));
+                });
+
+                if(value[0] == 15) {
+                    Platform.runLater(() -> {
+                        btnCommandes.setDisable(true);
+                    });
+                }
+                if (value[0] == 0 && value[1] == 0) {
+                    break;
+                }
+                else if (value[1] == 0) {
+                    value[1] = 59;
+                    value[0]--;
+                }
+                value[1]--;
+
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(40);
                 } catch (InterruptedException e) {
                     System.out.println(e);
                     throw new RuntimeException(e);
                 }
             }
-         /*   Platform.runLater(() -> {
-
-            });*/
-
         }).start();
+
     }
 
 
