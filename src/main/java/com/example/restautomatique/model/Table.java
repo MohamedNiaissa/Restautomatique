@@ -5,10 +5,11 @@ public class Table {
     private String emplacement;
     private String status;
 
-    public Table(String size, String emplacement) {
+    public Table(String size, String emplacement, String status) {
         this.size = size;
         this.emplacement = emplacement;
-        this.status = "Disponible";
+        if (status.equals("")) this.status = "Disponible";
+        else this.status = status;
     }
 
     public String getSize() {

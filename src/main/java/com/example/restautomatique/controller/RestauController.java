@@ -16,10 +16,10 @@ public class RestauController implements Initializable {
     private HBox employeApp;
 
     @FXML
-    private Button btnEmployes;
+    private HBox dishsApp;
 
     @FXML
-    private HBox dishsApp;
+    private HBox tablesApp;
 
     @FXML
     private HBox financeApp;
@@ -27,26 +27,43 @@ public class RestauController implements Initializable {
     private SplitPane splitpane;
 
     @FXML
+    private Button btnEmployes;
+
+    @FXML
     private Button btnPlats;
+
+    @FXML
+    private Button btnTables;
 
     @FXML
     private VBox mainApp;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        splitpane.getItems().remove(dishsApp);
         splitpane.getItems().remove(employeApp);
-
-        btnPlats.setOnMousePressed(actionEvent -> {
-            splitpane.getItems().add(dishsApp);
-            splitpane.getItems().remove(employeApp);
-            splitpane.getItems().remove(financeApp);
-        });
+        splitpane.getItems().remove(dishsApp);
+        splitpane.getItems().remove(tablesApp);
 
         btnEmployes.setOnMousePressed( actionEvent -> {
             splitpane.getItems().add(employeApp);
             splitpane.getItems().remove(dishsApp);
+            splitpane.getItems().remove(tablesApp);
             splitpane.getItems().remove(financeApp);
         });
+
+        btnPlats.setOnMousePressed(actionEvent -> {
+            splitpane.getItems().add(dishsApp);
+            splitpane.getItems().remove(employeApp);
+            splitpane.getItems().remove(tablesApp);
+            splitpane.getItems().remove(financeApp);
+        });
+
+        btnTables.setOnMousePressed(actionEvent -> {
+            splitpane.getItems().add(tablesApp);
+            splitpane.getItems().remove(employeApp);
+            splitpane.getItems().remove(dishsApp);
+            splitpane.getItems().remove(financeApp);
+        });
+
     }
 }
