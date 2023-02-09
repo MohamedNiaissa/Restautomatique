@@ -1,12 +1,13 @@
 module com.example.restautomatique {
     requires javafx.controls;
     requires javafx.fxml;
-
+    requires org.json;
+    requires itextpdf;
 
     opens com.example.restautomatique to javafx.fxml;
     exports com.example.restautomatique;
-    exports com.example.restautomatique.controller;
     opens com.example.restautomatique.controller to javafx.fxml;
+    exports com.example.restautomatique.controller;
     opens com.example.restautomatique.model;
     exports com.example.restautomatique.model;
 }

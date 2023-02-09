@@ -46,8 +46,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
-
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.restautomatique.controller.RestauController">
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Button?>
+<VBox fx:id="mainApp" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.restautomatique.controller.RestauController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -99,13 +100,15 @@
                   <Button fx:id="btnFinance" layoutX="64.0" layoutY="471.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="95.0" text="Finance" />
           </children>
         </AnchorPane>
+            <fx:include fx:id="employeApp" source="Employe.fxml" />
+            <fx:include source="FinancialReport.fxml" />
             <fx:include fx:id="dishsApp" source="Plat.fxml" />
       </items>
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
       <children>
-        <Pane HBox.hgrow="ALWAYS" />
-        <Label text="Chronomètre" HBox.hgrow="NEVER">
+        <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
+        <Label maxWidth="-1.0" text="Chronomètre" HBox.hgrow="NEVER">
                <font>
             <Font size="11.0" fx:id="x3" />
                </font>
