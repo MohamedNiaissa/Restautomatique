@@ -15,54 +15,96 @@ import java.util.ResourceBundle;
 public class RestauController extends Thread  implements Initializable {
 
     @FXML
-    private HBox employeApp;
-
+    private HBox commandeApp;
     @FXML
-    private Button btnEmployes;
+    private HBox employeApp;
+    @FXML
+    private HBox financeApp;
+    @FXML
+    private HBox dishsApp;
+    @FXML
+    private HBox tablesApp;
 
     @FXML
     private Button btnCommandes;
-    
+    @FXML
+    private Button btnEmployes;
+    @FXML
+    private Button btnFinance;
+
     @FXML
     private SplitPane splitpane;
 
     @FXML
+    private Button btnPlats;
+
+    @FXML
+    private Button btnTables;
+
+    @FXML
     private VBox mainApp;
 
+    public int[] time = {25,0};
+
+
+    public void clear(){
+        splitpane.getItems().remove(dishsApp);
+        splitpane.getItems().remove(employeApp);
+        splitpane.getItems().remove(financeApp);
+        splitpane.getItems().remove(commandeApp);
+        splitpane.getItems().remove(tablesApp);
+    }
     @FXML
     private Label chrono;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        splitpane.getItems().remove(employeApp);
+        clear();
 
+        btnPlats.setOnMousePressed(actionEvent -> {
+            clear();
+            splitpane.getItems().add(dishsApp);
+        });
+        btnCommandes.setOnMousePressed( actionEvent -> {
+            clear();
+            splitpane.getItems().add(commandeApp);
+        });
         btnEmployes.setOnMousePressed( actionEvent -> {
+            clear();
             splitpane.getItems().add(employeApp);
         });
+        btnFinance.setOnMousePressed( actionEvent -> {
+            clear();
+            splitpane.getItems().add(financeApp);
+        });
+        btnTables.setOnMousePressed(actionEvent -> {
+            clear();
+            splitpane.getItems().add(tablesApp);
+        });
 
-        int[] value = {25,0};
         new Thread(() -> {
             while (true) {
                 Platform.runLater(() -> {
-                 chrono.setText(Integer.toString(value[0]) + " : " + Integer.toString(value[1]));
+                 chrono.setText(Integer.toString(time[0]) + " : " + Integer.toString(time[1]));
                 });
 
-                if(value[0] == 15) {
+                if(time[0] == 15 && time[1] == 0) {
                     Platform.runLater(() -> {
+                        splitpane.getItems().remove(commandeApp);
                         btnCommandes.setDisable(true);
                     });
                 }
-                if (value[0] == 0 && value[1] == 0) {
+                if (time[0] == 0 && time[1] == 0) {
                     break;
                 }
-                else if (value[1] == 0) {
-                    value[1] = 59;
-                    value[0]--;
+                else if (time[1] == 0) {
+                    time[1] = 59;
+                    time[0]--;
                 }
-                value[1]--;
+                time[1]--;
 
                 try {
-                    Thread.sleep(40);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     System.out.println(e);
                     throw new RuntimeException(e);
