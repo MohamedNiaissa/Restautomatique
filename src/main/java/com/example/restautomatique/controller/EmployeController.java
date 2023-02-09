@@ -58,7 +58,7 @@ public class EmployeController implements Initializable {
         try {
             jsonEmployes = new String(Files.readAllBytes(Paths.get(path + "employe.json")));
         } catch (IOException e) {
-            System.out.println("Fichier n'existe pas encore.");
+            System.out.println("Fichier JSON n'existe pas encore. Création du fichier...");
         }
 
         //On ajoute les valeurs du JSON à l'observable list
@@ -100,15 +100,6 @@ public class EmployeController implements Initializable {
                 employeesModels.add(new_employe);
             }
 
-            //Si le fichier n'existe pas, on le crée
-            JSONArray employeJsonArray = new JSONArray();
-            try {
-                String employeJson = new String(Files.readAllBytes(Paths.get(path+"employe.json")));
-                employeJsonArray = new JSONArray(employeJson);
-            } catch(IOException e) {
-                System.out.println("Fichier n'existe pas encore.");
-            }
-
             //On crée un objet Json
             JSONObject employeJson = new JSONObject();
             employeJson.put("name",filedNameValue);
@@ -116,19 +107,25 @@ public class EmployeController implements Initializable {
             employeJson.put("hours",fieldWorkHoursValue);
             employeJson.put("age",fieldAgeValue);
 
-            //On crée un array Json à partir de ce qui existe déjà avec le nouvel objet, et on crée/update le fichier
-            employeJsonArray.put(employeJson);
+            //On réutilise l'array Json à partir de ce qui existe déjà avec le nouvel objet, et on crée/update le fichier
+            arrayEmployes.put(employeJson);
             try (PrintWriter out = new PrintWriter(new FileWriter(path+"employe.json"))) {
-                out.write(employeJsonArray.toString());
+                out.write(arrayEmployes.toString());
             } catch (Exception e) {
-                System.out.println("Fail");;
+                System.out.println("Echec: pas de mise à jour du JSON.");
             }
         });
 
-        //On supprime la ligne de l'employé dans le tableau, et dans l'obsList
+        //On supprime la ligne de l'employé dans le tableau, dans l'obsList et le JSON.
         btnDelete.setOnMousePressed(actionEvent -> {
             TablePosition selectCellSupr = tableEmployee.getSelectionModel().getSelectedCells().get(0);
             employeesModels.remove(selectCellSupr.getRow());
+            arrayEmployes.remove(selectCellSupr.getRow());
+            try (PrintWriter out = new PrintWriter(new FileWriter(path+"employe.json"))) {
+                out.write(arrayEmployes.toString());
+            } catch (Exception e) {
+                System.out.println("Echec: ligne non supprimée.");
+            }
         });
     }
 }
