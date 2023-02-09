@@ -2,68 +2,40 @@ package com.example.restautomatique.controller;
 
 import com.example.restautomatique.model.Employe;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import org.json.*;
-
-import static java.lang.Integer.parseInt;
-
-public class RestauController {
-    @FXML
-    private TextField iptName;
-    @FXML
-    private TextField iptRole;
-    @FXML
-    private TextField iptHours;
-    @FXML
-    private TextField iptAge;
+public class RestauController implements Initializable {
 
     @FXML
-    protected void newEmployee() {
+    private HBox employeApp;
 
-        //On récup le texte des cases
-        String nom = iptName.getText();
-        String role = iptRole.getText();
-        int heures = parseInt(iptHours.getText());
-        int age = parseInt(iptAge.getText());
+    @FXML
+    private Button btnEmployes;
+    
+    @FXML
+    private SplitPane splitpane;
 
-        //On crée un nouvel objet employé
-        Employe test = new Employe(nom,age,role,heures);
-        System.out.println(test.toString());
+    @FXML
+    private VBox mainApp;
 
-        //Si le fichier n'existe pas, on le crée
-        String path = "src/main/resources/com/example/restautomatique/";
-        JSONArray employeJsonArray = new JSONArray();
-        try {
-            String employeJson = new String(Files.readAllBytes(Paths.get(path+"employe.json")));
-            employeJsonArray = new JSONArray(employeJson);
-        } catch(IOException e) {
-            System.out.println("Fichier n'existe pas encore.");
-        }
+    @FXML
+    private HBox h;
 
-        //On crée un objet Json
-        JSONObject employeJson = new JSONObject();
-        employeJson.put("name",nom);
-        employeJson.put("role",role);
-        employeJson.put("hours",heures);
-        employeJson.put("age",age);
 
-        //On crée un array Json à partir de ce qui existe déjà avec le nouvel objet, et on crée/update le fichier
-        employeJsonArray.put(employeJson);
-        try (PrintWriter out = new PrintWriter(new FileWriter(path+"employe.json"))) {
-            out.write(employeJsonArray.toString());
-        } catch (Exception e) {
-            System.out.println("Fail");;
-        }
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        splitpane.getItems().remove(employeApp);
 
+        btnEmployes.setOnMousePressed( actionEvent -> {
+            splitpane.getItems().add(employeApp);
+        });
     }
 }
