@@ -45,6 +45,7 @@ public class PlatController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        /* Lie la liste plats avec le tableau dishTab */
         ObservableList<Plat> plats = FXCollections.observableArrayList();
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         descrColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -54,12 +55,14 @@ public class PlatController implements Initializable {
         pictureColumn.setCellValueFactory(new PropertyValueFactory<>("picture"));
         dishTab.setItems(plats);
 
+        /* Ajoute une instance de Plat a la liste plats*/
         addPlatButton.setOnMousePressed( e -> {
            Plat plat = new Plat(nameNew.getText(), descrNew.getText(), Integer.parseInt(sellNew.getText()), Integer.parseInt(preparedNew.getText()), pictureNew.getText(), ingredientNew.getText());
             clearForm();
             plats.add(plat);
             });
 
+        /* Remplis les champs du formulaires avec les informations du Plat sélectionné dans le tableau dishTab*/
         dishTab.setOnMousePressed( e -> {
             TablePosition selectCell = dishTab.getSelectionModel().getSelectedCells().get(0);
             nameNew.setText(plats.get(selectCell.getRow()).getName());
@@ -70,12 +73,16 @@ public class PlatController implements Initializable {
             pictureNew.setText(plats.get(selectCell.getRow()).getPicture());
         });
 
+        /* Supprime le Plat sélectionné dans le tableau dishTab de la liste plats */
         delPlatButton.setOnMousePressed( e -> {
             TablePosition selectCellSupr = dishTab.getSelectionModel().getSelectedCells().get(0);
             plats.remove(selectCellSupr.getRow());
             clearForm();
         });
     }
+
+    /* Efface le contenu des champs du formulaire
+     * Utiliser lors de l'ajout et la suppresion de Plat */
     public void clearForm() {
         nameNew.clear();
         descrNew.clear();
