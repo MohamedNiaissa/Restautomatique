@@ -56,12 +56,7 @@ public class PlatController implements Initializable {
 
         addPlatButton.setOnMousePressed( e -> {
            Plat plat = new Plat(nameNew.getText(), descrNew.getText(), Integer.parseInt(sellNew.getText()), Integer.parseInt(preparedNew.getText()), pictureNew.getText(), ingredientNew.getText());
-            nameNew.clear();
-            descrNew.clear();
-            sellNew.clear();
-            preparedNew.clear();
-            ingredientNew.clear();
-            pictureNew.clear();
+            clearForm();
             plats.add(plat);
             });
 
@@ -78,8 +73,15 @@ public class PlatController implements Initializable {
         delPlatButton.setOnMousePressed( e -> {
             TablePosition selectCellSupr = dishTab.getSelectionModel().getSelectedCells().get(0);
             plats.remove(selectCellSupr.getRow());
+            clearForm();
         });
-
     }
-
+    public void clearForm() {
+        nameNew.clear();
+        descrNew.clear();
+        sellNew.clear();
+        preparedNew.clear();
+        ingredientNew.clear();
+        pictureNew.clear();
+    }
 }
