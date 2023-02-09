@@ -70,7 +70,7 @@ public class CommandeController implements Initializable {
         Plat plat1 = new Plat("pates", "jsp", 10, 8, "non", "ingredients");
         plats.add(plat1);
 
-        Table table = new Table("grande","arriere");
+        Table table = new Table("grande","arriere","");
 
         //On ajoute les valeurs du JSON à l'observable list
         JSONArray arrayCommandes = new JSONArray(jsonCommandes);

@@ -23,6 +23,9 @@ public class RestauController implements Initializable {
     @FXML
     private HBox dishsApp;
     @FXML
+    private HBox tablesApp;
+
+    @FXML
     private Button btnCommandes;
     @FXML
     private Button btnEmployes;
@@ -36,6 +39,9 @@ public class RestauController implements Initializable {
     private Button btnPlats;
 
     @FXML
+    private Button btnTables;
+
+    @FXML
     private VBox mainApp;
 
     public void clear(){
@@ -43,6 +49,7 @@ public class RestauController implements Initializable {
         splitpane.getItems().remove(employeApp);
         splitpane.getItems().remove(financeApp);
         splitpane.getItems().remove(commandeApp);
+        splitpane.getItems().remove(tablesApp);
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -63,6 +70,10 @@ public class RestauController implements Initializable {
         btnFinance.setOnMousePressed( actionEvent -> {
             clear();
             splitpane.getItems().add(financeApp);
+        });
+        btnTables.setOnMousePressed(actionEvent -> {
+            clear();
+            splitpane.getItems().add(tablesApp);
         });
     }
 }
