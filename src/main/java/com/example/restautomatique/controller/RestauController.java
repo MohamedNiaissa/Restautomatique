@@ -26,10 +26,6 @@ public class RestauController implements Initializable {
     @FXML
     private VBox mainApp;
 
-    @FXML
-    private HBox h;
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         splitpane.getItems().remove(employeApp);

@@ -51,7 +51,7 @@ public class EmployeController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         ObservableList<Employe> employeesModels = FXCollections.observableArrayList();
-        String path = "src/main/resources/com/example/restautomatique/Fichiers JSON/";
+        String path = "src/main/resources/com/example/restautomatique/Fichiers_JSON/";
 
         //On récupère le fichier JSON actuel et on le stocke (si il existe)
         String jsonEmployes = "[]";
@@ -95,8 +95,8 @@ public class EmployeController implements Initializable {
                 Employe new_employe = new Employe(filedNameValue, Integer.parseInt(fieldAgeValue), fieldJobValue, Integer.parseInt(fieldWorkHoursValue));
                 employeesModels.add(new_employe);
             } else if (Objects.equals(fieldWorkHoursValue, "")) {
-                System.out.println(fieldAge.getText());
                 Employe new_employe = new Employe(filedNameValue, Integer.parseInt(fieldAgeValue), fieldJobValue, 0);
+                System.out.println("condition 0: " + new_employe);
                 employeesModels.add(new_employe);
             }
 
@@ -104,12 +104,17 @@ public class EmployeController implements Initializable {
             JSONObject employeJson = new JSONObject();
             employeJson.put("name",filedNameValue);
             employeJson.put("role",fieldJobValue);
-            employeJson.put("hours",fieldWorkHoursValue);
+            if (Objects.equals(fieldWorkHoursValue, "")) {
+                employeJson.put("hours", "0");
+            } else {
+                employeJson.put("hours", fieldWorkHoursValue);
+            }
             employeJson.put("age",fieldAgeValue);
 
             //On réutilise l'array Json à partir de ce qui existe déjà avec le nouvel objet, et on crée/update le fichier
             arrayEmployes.put(employeJson);
             try (PrintWriter out = new PrintWriter(new FileWriter(path+"employe.json"))) {
+                System.out.println(fieldWorkHoursValue);
                 out.write(arrayEmployes.toString());
             } catch (Exception e) {
                 System.out.println("Echec: pas de mise à jour du JSON.");
