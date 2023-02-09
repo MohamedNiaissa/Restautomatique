@@ -66,8 +66,9 @@
                   <Button fx:id="btnFinance" layoutX="64.0" layoutY="471.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="95.0" text="Finance" />
           </children>
         </AnchorPane>
+            <fx:include fx:id="commandeApp" source="Commande.fxml" />
             <fx:include fx:id="employeApp" source="Employe.fxml" />
-            <fx:include source="FinancialReport.fxml" />
+            <fx:include fx:id="financeApp" source="FinancialReport.fxml" />
       </items>
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
