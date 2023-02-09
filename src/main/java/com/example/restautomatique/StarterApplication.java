@@ -26,32 +26,5 @@ public class StarterApplication extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
-
-        String path = "src/main/resources/com/example/restautomatique/";
-        String jsonEmployes = "[]";
-
-        try{
-            jsonEmployes = new String(Files.readAllBytes(Paths.get(path+"employe.json")));
-        } catch(IOException e){
-            System.out.println("Fichier n'existe pas :(");
-        }
-
-        JSONArray arrayEmployes = new JSONArray(jsonEmployes);
-        ObservableList<Employe> obsListEmploye = FXCollections.observableArrayList();
-        for (int i = 0; i < arrayEmployes.length(); i++) {
-            JSONObject objetEmployes = arrayEmployes.getJSONObject(i);
-            Employe employe = new Employe(
-                    objetEmployes.getString("name"),
-                    objetEmployes.getInt("age"),
-                    objetEmployes.getString("role"),
-                    objetEmployes.getInt("hours")
-            );
-            obsListEmploye.add(employe);
-
-            System.out.println(employe);
-        }
-
-        launch();
-    }
+    public static void main(String[] args) {launch();}
 }
