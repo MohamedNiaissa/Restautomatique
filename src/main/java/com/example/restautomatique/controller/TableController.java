@@ -100,7 +100,7 @@ public class TableController implements Initializable {
             placeNew.setText(tables.get(selectCell.getRow()).getEmplacement());
         });
 
-        /* Supprime le Table sélectionné dans le tableau tableTab de la liste tables */
+        /* Supprime la Table sélectionné dans le tableau tableTab de la liste tables */
         delTableButton.setOnMousePressed( e -> {
             TablePosition selectCellSupr = tableTab.getSelectionModel().getSelectedCells().get(0);
             tables.remove(selectCellSupr.getRow());
@@ -112,7 +112,7 @@ public class TableController implements Initializable {
             }
             clearForm();
         });
-
+        /* Change le status de la table sélectionné en Disponible au cas où le changement n'est pas été effectué ailleurs*/
         libreTableButton.setOnMousePressed( e -> {
             TablePosition selectCellLibre = tableTab.getSelectionModel().getSelectedCells().get(0);
             Table table = new Table(
