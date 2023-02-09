@@ -1,14 +1,24 @@
 package com.example.restautomatique.controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.fxml.Initializable;
+import javafx.scene.layout.HBox;
 
-public class RestauController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class RestauController implements Initializable {
     @FXML
-    private Label welcomeText;
+    private HBox Dishs;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        Dishs.setOpacity(0);
+    }
 
     @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
+    protected void onPlatsButtonClick() {
+        if (Dishs.getOpacity() == 0) Dishs.setOpacity(1);
+        else Dishs.setOpacity(0);
     }
 }

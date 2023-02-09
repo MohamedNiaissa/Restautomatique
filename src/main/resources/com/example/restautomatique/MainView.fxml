@@ -88,23 +88,24 @@
         </Menu>
       </menus>
     </MenuBar>
-    <SplitPane focusTraversable="true" prefHeight="553.0" prefWidth="686.0" VBox.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.5" focusTraversable="true" prefHeight="553.0" prefWidth="686.0" VBox.vgrow="ALWAYS">
       <items>
         <AnchorPane prefHeight="551.0" prefWidth="326.0">
           <children>
-                  <Button fx:id="btnPlats" layoutX="64.0" layoutY="60.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="95.0" text="Plats" />
+                  <Button fx:id="btnPlats" layoutX="64.0" layoutY="60.0" mnemonicParsing="false" onAction="#onPlatsButtonClick" prefHeight="28.0" prefWidth="95.0" text="Plats" />
                   <Button fx:id="btnCommandes" layoutX="64.0" layoutY="157.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="95.0" text="Commandes" />
                   <Button fx:id="btnTables" layoutX="64.0" layoutY="262.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="95.0" text="Tables" />
                   <Button fx:id="btnEmployes" layoutX="64.0" layoutY="361.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="95.0" text="Employés" />
                   <Button fx:id="btnFinance" layoutX="64.0" layoutY="471.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="95.0" text="Finance" />
           </children>
         </AnchorPane>
+            <fx:include fx:id="Dishs" source="Plat.fxml" />
       </items>
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
       <children>
-        <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
-        <Label maxWidth="-1.0" text="Chronomètre" HBox.hgrow="NEVER">
+        <Pane HBox.hgrow="ALWAYS" />
+        <Label text="Chronomètre" HBox.hgrow="NEVER">
                <font>
             <Font size="11.0" fx:id="x3" />
                </font>
