@@ -1,5 +1,6 @@
 package com.example.restautomatique;
 
+import com.example.restautomatique.controller.RestauController;
 import com.example.restautomatique.model.Employe;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -27,5 +28,7 @@ public class StarterApplication extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {launch();}
+    public static void main(String[] args)  {
+        launch();
+    }
 }
