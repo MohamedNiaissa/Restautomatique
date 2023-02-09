@@ -6,11 +6,11 @@ public class Employe {
     String role;
     int hour;
 
-    public Employe(String name, int age, String role) {
+    public Employe(String name, int age, String role, int hour) {
         this.name = name;
         this.age = age;
         this.role = role;
-        this.hour = 0;
+        this.hour = hour;
     }
 
     public String getName() {
