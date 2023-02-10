@@ -5,6 +5,12 @@ public class Table {
     private String emplacement;
     private String status;
 
+    /**
+     * Les tables du restaurant
+     * @param size La taille de la table
+     * @param emplacement L'emplacement de la table dans le restaurant
+     * @param status Le status de la table
+     */
     public Table(String size, String emplacement, String status) {
         this.size = size;
         this.emplacement = emplacement;

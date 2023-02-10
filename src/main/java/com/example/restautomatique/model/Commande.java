@@ -11,6 +11,13 @@ public class Commande {
     private String creationDate;
     private String status;
 
+    /**
+     * La commande d'un client
+     * @param plat La liste d'objets Plats de la commande
+     * @param table La table qui a passé la commande
+     * @param creationDate La date de création de la commande
+     * @param status Le status de la commande
+     */
     public Commande(ArrayList<Plat> plat, Table table, String creationDate, String status) {
         this.plat = plat;
         this.table = table;

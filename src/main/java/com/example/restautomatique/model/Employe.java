@@ -6,6 +6,13 @@ public class Employe {
     String role;
     int hour;
 
+    /**
+     * Les employés du restaurant.
+     * @param name Le nom de l'employé
+     * @param age L'age de l'employé
+     * @param role Le poste de l'employé
+     * @param hour Le temps de travail de l'employé
+     */
     public Employe(String name, int age, String role, int hour) {
         this.name = name;
         this.age = age;
