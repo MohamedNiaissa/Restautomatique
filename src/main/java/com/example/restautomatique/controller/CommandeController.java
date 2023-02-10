@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.lang.Integer.parseInt;
@@ -109,19 +111,45 @@ public class CommandeController implements Initializable {
         //On ajoute les valeurs du JSON à l'observable list
         JSONArray arrayCommandes = new JSONArray(jsonCommandes);
         for (int i = 0; i < arrayCommandes.length(); i++) {
-            //JSONObject objetCommandes = arrayCommandes.getJSONObject(i);
-            //JSONArray testtt = objetCommandes.getJSONArray("plat");
-            //ArrayList<Plat> test2 = new ArrayList<Plat>();
-            //for (Object plat : testtt) {
-            //    Plat platObjet = new Plat(plat);
-            //    System.out.println(plat);
-            //}
-            //Commande commande = new Commande(
-                    //objetCommandes.getJSONArray("plat"),
-                    //objetCommandes.getJSONArray("table"),
-                    //objetCommandes.getString("date")
-            //);
-            //commandesModels.add(commande);
+            JSONObject objetCommandes = arrayCommandes.getJSONObject(i);
+
+            //On récup les plats du Json
+            JSONArray platsCommande = objetCommandes.getJSONArray("plat");
+            ArrayList<Plat> listeDePlats = new ArrayList<Plat>();
+            for (int j = 0; j < platsCommande.length(); j++) {
+                Plat platCommande = new Plat(
+                        platsCommande.getJSONObject(j).getString("name"),
+                        platsCommande.getJSONObject(j).getString("description"),
+                        platsCommande.getJSONObject(j).getInt("sellPrice"),
+                        platsCommande.getJSONObject(j).getInt("preparationPrice"),
+                        platsCommande.getJSONObject(j).getString("picture"),
+                        platsCommande.getJSONObject(j).getString("ingredient")
+                );
+                listeDePlats.add(platCommande);
+            }
+            //On récup la table du Json
+            String tableCommandeJson = objetCommandes.get("table").toString();
+
+            Pattern pattern = Pattern.compile("size='(.*?)', emplacement='(.*?)', status='(.*?)'");
+            Matcher matcher = pattern.matcher(tableCommandeJson);
+
+            Table tableDeLaCommande = new Table("","","");
+
+            if (matcher.find()) {
+                String size = matcher.group(1);
+                String emplacement = matcher.group(2);
+                String status = matcher.group(3);
+
+                tableDeLaCommande = new Table(size,emplacement,status);
+            }
+
+            //On ajoute le tout dans le model
+            Commande commande = new Commande(
+                    listeDePlats,
+                    tableDeLaCommande,
+                    objetCommandes.getString("date")
+            );
+            commandesModels.add(commande);
         }
 
         //On remplis les cellules du tableau principal
@@ -144,15 +172,17 @@ public class CommandeController implements Initializable {
                 selectedPlats.add(test.get(0));
             }
 
-            Table selectedTable = tablesModels.get(boxTable.getSelectionModel().getSelectedIndex());
+            Table selectedTable1 = tablesModels.get(boxTable.getSelectionModel().getSelectedIndex());
+            Table selectedTable2 = new Table(selectedTable1.getSize(),selectedTable1.getEmplacement(),selectedTable1.getStatus());
+            System.out.println(selectedTable2);
 
-            Commande new_commande = new Commande(selectedPlats,selectedTable,"");
+            Commande new_commande = new Commande(selectedPlats,selectedTable2,"");
             commandesModels.add(new_commande);
 
             //On crée un objet Json
             JSONObject commandeJson = new JSONObject();
             commandeJson.put("plat",selectedPlats);
-            commandeJson.put("table",selectedTable);
+            commandeJson.put("table",selectedTable2);
             commandeJson.put("date",LocalDateTime.now());
 
             //On réutilise l'array Json à partir de ce qui existe déjà avec le nouvel objet, et on crée/update le fichier
