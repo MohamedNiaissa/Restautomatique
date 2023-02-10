@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -19,9 +18,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.ResourceBundle;
-
-import static java.lang.Integer.parseInt;
-import org.json.*;
 
 public class EmployeController implements Initializable {
 
@@ -47,6 +43,10 @@ public class EmployeController implements Initializable {
     private Button btnAdd;
     @FXML
     private Button btnDelete;
+    @FXML
+    private Label trente;
+    @FXML
+    private Label quarante;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -73,12 +73,13 @@ public class EmployeController implements Initializable {
             );
             employeesModels.add(employe);
         }
+        refreshAge(employeesModels);
 
         //On remplis les cellules du tableau principal
-        columnName.setCellValueFactory(new PropertyValueFactory<Employe, String>("name"));
-        columnAge.setCellValueFactory(new PropertyValueFactory<Employe, String>("age"));
-        columnJob.setCellValueFactory(new PropertyValueFactory<Employe, String>("role"));
-        columnWorkHours.setCellValueFactory(new PropertyValueFactory<Employe, String>("hour"));
+        columnName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        columnAge.setCellValueFactory(new PropertyValueFactory<>("age"));
+        columnJob.setCellValueFactory(new PropertyValueFactory<>("role"));
+        columnWorkHours.setCellValueFactory(new PropertyValueFactory<>("hour"));
         tableEmployee.setItems(employeesModels);
 
         //Si le formulaire est validé, on ajoute les valeurs dans le tableau et le JSON
@@ -99,6 +100,8 @@ public class EmployeController implements Initializable {
                 System.out.println("condition 0: " + new_employe);
                 employeesModels.add(new_employe);
             }
+            clearForm();
+            refreshAge(employeesModels);
 
             //On crée un objet Json
             JSONObject employeJson = new JSONObject();
@@ -126,11 +129,38 @@ public class EmployeController implements Initializable {
             TablePosition selectCellSupr = tableEmployee.getSelectionModel().getSelectedCells().get(0);
             employeesModels.remove(selectCellSupr.getRow());
             arrayEmployes.remove(selectCellSupr.getRow());
+            refreshAge(employeesModels);
             try (PrintWriter out = new PrintWriter(new FileWriter(path+"employe.json"))) {
                 out.write(arrayEmployes.toString());
             } catch (Exception e) {
                 System.out.println("Echec: ligne non supprimée.");
             }
         });
+    }
+    public void clearForm() {
+        filedName.clear();
+        fieldAge.clear();
+        fieldJob.clear();
+        fieldWorkHours.clear();
+    }
+    public void refreshAge(ObservableList<Employe> liste) {
+        long numberB3 = liste.stream()
+                .map(Employe::getAge)
+                .filter(age -> age < 30)
+                .count();
+        long numberU3 = liste.stream()
+                .map(Employe::getAge)
+                .filter(age -> age > 30)
+                .count();
+        trente.setText(numberB3+"/"+numberU3);
+        long numberB4 = liste.stream()
+                .map(Employe::getAge)
+                .filter(age -> age < 45)
+                .count();
+        long numberU4 = liste.stream()
+                .map(Employe::getAge)
+                .filter(age -> age > 45)
+                .count();
+        quarante.setText(numberB4+"/"+numberU4);
     }
 }
