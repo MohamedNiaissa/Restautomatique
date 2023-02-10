@@ -3,12 +3,15 @@ package com.example.restautomatique.controller;
 import com.example.restautomatique.model.Commande;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Header;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -34,6 +37,12 @@ public class FinancialReportController implements Initializable {
 
     @FXML
     private TextField pathForPdf;
+
+    @FXML
+    private Label recettes;
+
+    @FXML
+    private Label depenses;
 
     private int sell = 0;
 
@@ -70,7 +79,6 @@ public class FinancialReportController implements Initializable {
 
         JSONArray arrayPlats = new JSONArray(jsonPlats);
         for (int j = 0; j < plats.size(); j++) {
-            System.out.println(plats.get(j));
             for (int o = 0; o < arrayPlats.length(); o++) {
                 JSONObject objetPlats = arrayPlats.getJSONObject(o);
                 if (plats.get(j).equals(objetPlats.getString("name"))) {
@@ -79,6 +87,9 @@ public class FinancialReportController implements Initializable {
                 }
             }
         }
+        recettes.setText(Integer.toString(this.sell - this.preparationPrice) + " €");
+        depenses.setText(Integer.toString(preparationPrice)+ " €");
+
             btnGenerate.setOnMousePressed(action -> {
             generatePdfForReport(pathForPdf.getText(), this.sell - this.preparationPrice, this.preparationPrice);
         });
@@ -99,6 +110,9 @@ public class FinancialReportController implements Initializable {
         {
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(path));
             document.open();
+            document.add(new Paragraph("Les chiffres de Restautomatique " ));
+            document.add(new Paragraph(" " ));
+            document.add(new Paragraph(" "));
             document.add(new Paragraph("Les recettes : " + recette + "€"));
             document.add(new Paragraph("Les dépenses : " + depense + "€"));
             document.close();
