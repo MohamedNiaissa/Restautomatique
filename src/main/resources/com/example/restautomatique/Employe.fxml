@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.restautomatique.controller.EmployeController">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.restautomatique.controller.EmployeController">
    <children>
       <ScrollPane prefHeight="400.0" prefWidth="400.0">
          <content>
@@ -36,6 +36,10 @@
             <TextField fx:id="fieldAge" layoutX="21.0" layoutY="199.0" />
             <Label layoutX="23.0" layoutY="176.0" text="Age" />
             <Button fx:id="btnDelete" layoutX="31.0" layoutY="492.0" mnemonicParsing="false" text="Supprimer l'employé" />
+            <Label layoutX="40.0" layoutY="430.0" text="-30/+30" />
+            <Label layoutX="110.0" layoutY="430.0" text="-45/+45" />
+            <Label fx:id="trente" layoutX="40.0" layoutY="450.0" text="/" />
+            <Label fx:id="quarante" layoutX="110.0" layoutY="450.0" text="/" />
          </children>
       </Pane>
    </children>
