@@ -83,8 +83,8 @@ public class CommandeController implements Initializable {
         for (int i = 0; i < arrayTables.length(); i++) {
             JSONObject objetTables = arrayTables.getJSONObject(i);
             Table table = new Table(
-                    objetTables.getString("emplacement"),
                     objetTables.getString("size"),
+                    objetTables.getString("emplacement"),
                     objetTables.getString("status")
             );
             tablesModels.add(table);
