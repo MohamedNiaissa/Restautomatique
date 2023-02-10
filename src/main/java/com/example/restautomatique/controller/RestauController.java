@@ -1,5 +1,6 @@
 package com.example.restautomatique.controller;
 
+import com.example.restautomatique.StockList;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -46,6 +47,7 @@ public class RestauController extends Thread  implements Initializable {
 
     public int[] time = {25,0};
 
+    private StockList stock = new StockList();
 
     public void clear(){
         splitpane.getItems().remove(dishsApp);
@@ -60,6 +62,8 @@ public class RestauController extends Thread  implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         clear();
+        stock.refreshPlat();
+        stock.refreshTable();
 
         btnPlats.setOnMousePressed(actionEvent -> {
             clear();
@@ -68,6 +72,8 @@ public class RestauController extends Thread  implements Initializable {
         btnCommandes.setOnMousePressed( actionEvent -> {
             clear();
             splitpane.getItems().add(commandeApp);
+            stock.refreshPlat();
+            stock.refreshTable();
         });
         btnEmployes.setOnMousePressed( actionEvent -> {
             clear();
@@ -84,9 +90,7 @@ public class RestauController extends Thread  implements Initializable {
 
         new Thread(() -> {
             while (true) {
-                Platform.runLater(() -> {
-                 chrono.setText(Integer.toString(time[0]) + " : " + Integer.toString(time[1]));
-                });
+                Platform.runLater(() -> chrono.setText(time[0] + " : " + time[1]));
 
                 if(time[0] == 15 && time[1] == 0) {
                     Platform.runLater(() -> {

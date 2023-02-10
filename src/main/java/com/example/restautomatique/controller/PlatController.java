@@ -1,7 +1,7 @@
 package com.example.restautomatique.controller;
 
+import com.example.restautomatique.StockList;
 import com.example.restautomatique.model.Plat;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -59,12 +59,12 @@ public class PlatController implements Initializable {
     private Label sum;
     @FXML
     private TextField search;
+    private StockList stock = new StockList();
+    private ObservableList<Plat> plats = stock.getPlats();
+    private ObservableList<Plat> saveplats = stock.getPlats();
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         /* Lie la liste plats avec le tableau dishTab */
-        ObservableList<Plat> saveplats = FXCollections.observableArrayList();
-        ObservableList<Plat> plats = FXCollections.observableArrayList();
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         descrColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         sellColumn.setCellValueFactory(new PropertyValueFactory<>("sellPrice"));
@@ -84,19 +84,6 @@ public class PlatController implements Initializable {
         }
         //On ajoute les valeurs du JSON à l'observable list
         JSONArray arrayPlats = new JSONArray(jsonPlats);
-        for (int i = 0; i < arrayPlats.length(); i++) {
-            JSONObject objetPlats = arrayPlats.getJSONObject(i);
-            Plat plat = new Plat(
-                    objetPlats.getString("name"),
-                    objetPlats.getString("description"),
-                    objetPlats.getInt("sellPrice"),
-                    objetPlats.getInt("preparationPrice"),
-                    objetPlats.getString("ingredient"),
-                    objetPlats.getString("picture")
-            );
-            plats.add(plat);
-        }
-        clearFormAndSum(plats,saveplats);
 
         /* Ajoute une instance de Plat a la liste plats*/
         addPlatButton.setOnMousePressed( e -> {
@@ -130,7 +117,7 @@ public class PlatController implements Initializable {
             } catch (Exception ex) {
                 System.out.println("Echec: pas de mise à jour du JSON.");
             }
-            clearFormAndSum(plats,saveplats);
+            clearFormAndSum();
             });
 
         /* Remplis les champs du formulaires avec les informations du Plat sélectionné dans le tableau dishTab*/
@@ -184,14 +171,14 @@ public class PlatController implements Initializable {
             } catch (Exception ex) {
                 System.out.println("Echec: ligne non supprimée.");
             }
-            clearFormAndSum(plats,saveplats);
+            clearFormAndSum();
         });
     }
 
     /* Efface le contenu des champs du formulaire et recalcule la somme des SellPrices de tout les plats
      * Utiliser lors de l'ajout et la suppresion de Plat */
-    public void clearFormAndSum(ObservableList<Plat> liste, ObservableList<Plat> saveliste) {
-        sum.setText(liste.stream()
+    public void clearFormAndSum() {
+        sum.setText(plats.stream()
                 .map(Plat::getSellPrice)
                 .reduce(0, Integer::sum)+"€ 1xtous les plats");
         nameNew.clear();
@@ -200,7 +187,8 @@ public class PlatController implements Initializable {
         preparedNew.clear();
         ingredientNew.clear();
         pictureNew.clear();
-        saveliste.clear();
-        saveliste.addAll(liste);
+        saveplats.clear();
+        saveplats.addAll(plats);
+        stock.refreshPlat();
     }
 }
