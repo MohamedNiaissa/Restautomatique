@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import static java.lang.Integer.parseInt;
 import org.json.*;
@@ -73,7 +74,7 @@ public class CommandeController implements Initializable {
                     objetTables.getString("status")
             );
             tablesModels.add(table);
-            boxTable.getItems().add(table);
+            boxTable.getItems().add(table.getEmplacement());
         }
 
         listPlats.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -95,7 +96,7 @@ public class CommandeController implements Initializable {
                     objetPlats.getString("ingredient")
             );
             platsModels.add(plat);
-            listPlats.getItems().add(plat);
+            listPlats.getItems().add(plat.getName());
         }
 
         String jsonCommandes = "[]";
@@ -108,13 +109,19 @@ public class CommandeController implements Initializable {
         //On ajoute les valeurs du JSON à l'observable list
         JSONArray arrayCommandes = new JSONArray(jsonCommandes);
         for (int i = 0; i < arrayCommandes.length(); i++) {
-            JSONObject objetCommandes = arrayCommandes.getJSONObject(i);
-            /*Commande commande = new Commande(
-                    objetCommandes.getJSONArray("plat"),
-                    objetCommandes.getString("table"),
-                    objetCommandes.getString("date")
-            );
-            commandesModels.add(commande);*/
+            //JSONObject objetCommandes = arrayCommandes.getJSONObject(i);
+            //JSONArray testtt = objetCommandes.getJSONArray("plat");
+            //ArrayList<Plat> test2 = new ArrayList<Plat>();
+            //for (Object plat : testtt) {
+            //    Plat platObjet = new Plat(plat);
+            //    System.out.println(plat);
+            //}
+            //Commande commande = new Commande(
+                    //objetCommandes.getJSONArray("plat"),
+                    //objetCommandes.getJSONArray("table"),
+                    //objetCommandes.getString("date")
+            //);
+            //commandesModels.add(commande);
         }
 
         //On remplis les cellules du tableau principal
@@ -123,14 +130,18 @@ public class CommandeController implements Initializable {
         columnDate.setCellValueFactory(new PropertyValueFactory<Commande, String>("creationDate"));
         tableCommande.setItems(commandesModels);
 
+
         //Si le formulaire est validé, on ajoute les valeurs dans le tableau et le JSON
         btnAdd.setOnMousePressed( actionEvent -> {
 
-            ObservableList<Plat> selectedPlatsObs =  listPlats.getSelectionModel().getSelectedItems();
+            ObservableList<String> selectedPlatsObs =  listPlats.getSelectionModel().getSelectedItems();
+            //System.out.println(selectedPlatsObs);
             ArrayList<Plat> selectedPlats = new ArrayList<Plat>();
-            for(Plat p : selectedPlatsObs){
-                System.out.println("selected item " + p.toString());
-                selectedPlats.add(p);
+
+            for(String plat : selectedPlatsObs){
+                List<Plat> test = platsModels.stream().filter(plat1 -> plat1.getName() == plat).collect(Collectors.toList());
+                System.out.println("selected item: " + test.get(0));
+                selectedPlats.add(test.get(0));
             }
 
             Table selectedTable = tablesModels.get(boxTable.getSelectionModel().getSelectedIndex());
