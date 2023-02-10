@@ -1,5 +1,6 @@
 package com.example.restautomatique.controller;
 
+import com.example.restautomatique.StockList;
 import com.example.restautomatique.model.Commande;
 import com.example.restautomatique.model.Plat;
 import com.example.restautomatique.model.Table;
@@ -9,28 +10,22 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Array;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import static java.lang.Integer.parseInt;
-import org.json.*;
+import java.util.*;
 
 public class CommandeController implements Initializable {
 
@@ -60,13 +55,22 @@ public class CommandeController implements Initializable {
     private Button btnStatusAtt;
     @FXML
     private Button btnStatusPrep;
+    @FXML
+    private Button plus;
+    @FXML
+    private Button moins;
+    @FXML
+    private TextField search;
+
+    private StockList stock = new StockList();
+    private ObservableList<Plat> platsModels = stock.getPlats();
+    private ObservableList<Table> tablesModels = stock.getTables();
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         //Pour chaque ligne dans JSON, on crée un objet
         ObservableList<Commande> commandesModels = FXCollections.observableArrayList();
-        ArrayList<Plat> platsModels = new ArrayList<Plat>();
-        ArrayList<Table> tablesModels = new ArrayList<Table>();
+
         String path = "src/main/resources/com/example/restautomatique/Fichiers_JSON/";
 
         String jsonTables = "[]";
@@ -88,26 +92,6 @@ public class CommandeController implements Initializable {
         }
 
         listPlats.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        String jsonPlats = "[]";
-        try {
-            jsonPlats = new String(Files.readAllBytes(Paths.get(path + "plat.json")));
-        } catch (IOException e) {
-            System.out.println("Fichier JSON n'existe pas encore. Création du fichier...");
-        }
-        JSONArray arrayPlats = new JSONArray(jsonPlats);
-        for (int i = 0; i < arrayPlats.length(); i++) {
-            JSONObject objetPlats = arrayPlats.getJSONObject(i);
-            Plat plat = new Plat(
-                    objetPlats.getString("name"),
-                    objetPlats.getString("description"),
-                    objetPlats.getInt("sellPrice"),
-                    objetPlats.getInt("preparationPrice"),
-                    objetPlats.getString("picture"),
-                    objetPlats.getString("ingredient")
-            );
-            platsModels.add(plat);
-            listPlats.getItems().add(plat.getName());
-        }
 
         String jsonCommandes = "[]";
         try {
@@ -167,18 +151,17 @@ public class CommandeController implements Initializable {
         columnDate.setCellValueFactory(new PropertyValueFactory<Commande, String>("creationDate"));
         columnStatus.setCellValueFactory(new PropertyValueFactory<Commande, String>("status"));
         tableauCommande.setItems(commandesModels);
-        System.out.println(commandesModels);
 
 
         //Si le formulaire est validé, on ajoute les valeurs dans le tableau et le JSON
         btnAdd.setOnMousePressed( actionEvent -> {
 
-            ObservableList<String> selectedPlatsObs =  listPlats.getSelectionModel().getSelectedItems();
+            ObservableList<String> selectedPlatsObs = listPlats.getSelectionModel().getSelectedItems();
             //System.out.println(selectedPlatsObs);
             ArrayList<Plat> selectedPlats = new ArrayList<Plat>();
 
-            for(String plat : selectedPlatsObs){
-                List<Plat> test = platsModels.stream().filter(plat1 -> plat1.getName() == plat).collect(Collectors.toList());
+            for (String plat : selectedPlatsObs) {
+                List<Plat> test = platsModels.stream().filter(plat1 -> plat1.getName().equals(plat)).toList();
                 System.out.println("selected item: " + test.get(0));
                 selectedPlats.add(test.get(0));
             }
@@ -199,7 +182,7 @@ public class CommandeController implements Initializable {
 
             //On réutilise l'array Json à partir de ce qui existe déjà avec le nouvel objet, et on crée/update le fichier
             arrayCommandes.put(commandeJson);
-            try (PrintWriter out = new PrintWriter(new FileWriter(path+"commande.json"))) {
+            try (PrintWriter out = new PrintWriter(new FileWriter(path + "commande.json"))) {
                 out.write(arrayCommandes.toString());
             } catch (Exception e) {
                 System.out.println("Echec: pas de mise à jour du JSON.");
@@ -211,7 +194,7 @@ public class CommandeController implements Initializable {
             TablePosition selectCellSupr = tableauCommande.getSelectionModel().getSelectedCells().get(0);
             commandesModels.remove(selectCellSupr.getRow());
             arrayCommandes.remove(selectCellSupr.getRow());
-            try (PrintWriter out = new PrintWriter(new FileWriter(path+"commande.json"))) {
+            try (PrintWriter out = new PrintWriter(new FileWriter(path + "commande.json"))) {
                 out.write(arrayCommandes.toString());
             } catch (Exception e) {
                 System.out.println("Echec: ligne non supprimée.");
@@ -272,5 +255,39 @@ public class CommandeController implements Initializable {
             }
         });
 
+
+        plus.setOnMousePressed(actionEvent -> {
+            List<Plat> newplatsModels = platsModels.stream()
+                    .sorted((plat1, plat2) -> plat2.getSellPrice() - plat1.getSellPrice())
+                    .toList();
+            listPlats.getItems().clear();
+            newplatsModels.forEach(Plat -> listPlats.getItems().add(Plat.getName()));
+        });
+        moins.setOnMousePressed(actionEvent -> {
+            List<Plat> newplatsModels = platsModels.stream()
+                    .sorted(Comparator.comparingInt(Plat::getSellPrice)).toList();
+            listPlats.getItems().clear();
+            newplatsModels.forEach(Plat -> listPlats.getItems().add(Plat.getName()));
+        });
+        search.setOnKeyReleased(actionEvent -> {
+            if (!search.getText().equals("")) {
+                List<Plat> newplatsModels = platsModels.stream()
+                        .filter(Plat -> Plat.getIngredient().contains(search.getText()))
+                        .toList();
+                listPlats.getItems().clear();
+                newplatsModels.forEach(Plat -> listPlats.getItems().add(Plat.getName()));
+            } else {
+                listPlats.getItems().clear();
+                platsModels.forEach(Plat -> listPlats.getItems().add(Plat.getName()));
+            }
+        });
     }
+    /* public void refreshFXML(){
+        boxTable.getItems().clear();
+        listPlats.getItems().clear();
+        List<String> tablePlace = tablesModels.stream().map(Table::getEmplacement).toList();
+        //boxTable.getItems().addAll(tablePlace);
+        List<String> platName = platsModels.stream().map(Plat::getName).toList();
+        listPlats.getItems().addAll(platName);
+    } */
 }

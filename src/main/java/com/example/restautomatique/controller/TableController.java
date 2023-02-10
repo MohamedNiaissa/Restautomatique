@@ -1,7 +1,7 @@
 package com.example.restautomatique.controller;
 
+import com.example.restautomatique.StockList;
 import com.example.restautomatique.model.Table;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -37,11 +37,12 @@ public class TableController implements Initializable {
     private TableColumn<Table, String> placeColumn;
     @FXML
     private TableColumn<Table, String> dispoColumn;
+    private StockList stock = new StockList();
+    private ObservableList<Table> tables = stock.getTables();
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         /* Lie la liste tables avec le tableau tableTab */
-        ObservableList<Table> tables = FXCollections.observableArrayList();
         sizeColumn.setCellValueFactory(new PropertyValueFactory<>("size"));
         placeColumn.setCellValueFactory(new PropertyValueFactory<>("emplacement"));
         dispoColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
@@ -58,15 +59,6 @@ public class TableController implements Initializable {
         }
         //On ajoute les valeurs du JSON à l'observable list
         JSONArray arrayTables = new JSONArray(jsonTables);
-        for (int i = 0; i < arrayTables.length(); i++) {
-            JSONObject objetTables = arrayTables.getJSONObject(i);
-            Table table = new Table(
-                    objetTables.getString("size"),
-                    objetTables.getString("emplacement"),
-                    objetTables.getString("status")
-            );
-            tables.add(table);
-        }
 
         /* Ajoute une instance de Table a la liste tables*/
         addTableButton.setOnMousePressed( e -> {
@@ -135,5 +127,6 @@ public class TableController implements Initializable {
     public void clearForm() {
         sizeNew.clear();
         placeNew.clear();
+        stock.refreshTable();
     }
 }
