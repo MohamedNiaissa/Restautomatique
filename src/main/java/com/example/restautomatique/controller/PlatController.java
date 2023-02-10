@@ -16,6 +16,8 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Comparator;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class PlatController implements Initializable {
@@ -49,10 +51,19 @@ public class PlatController implements Initializable {
     private TableColumn<Plat, String> ingredientColumn;
     @FXML
     private TableColumn<Plat, String> pictureColumn;
+    @FXML
+    private Button plus;
+    @FXML
+    private Button moins;
+    @FXML
+    private Label sum;
+    @FXML
+    private TextField search;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         /* Lie la liste plats avec le tableau dishTab */
+        ObservableList<Plat> saveplats = FXCollections.observableArrayList();
         ObservableList<Plat> plats = FXCollections.observableArrayList();
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         descrColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -85,6 +96,7 @@ public class PlatController implements Initializable {
             );
             plats.add(plat);
         }
+        clearFormAndSum(plats,saveplats);
 
         /* Ajoute une instance de Plat a la liste plats*/
         addPlatButton.setOnMousePressed( e -> {
@@ -101,7 +113,6 @@ public class PlatController implements Initializable {
                    preparation,
                    picture,
                    ingredient);
-            clearForm();
             plats.add(plat);
             //On crée un objet Json
             JSONObject platJson = new JSONObject();
@@ -119,6 +130,7 @@ public class PlatController implements Initializable {
             } catch (Exception ex) {
                 System.out.println("Echec: pas de mise à jour du JSON.");
             }
+            clearFormAndSum(plats,saveplats);
             });
 
         /* Remplis les champs du formulaires avec les informations du Plat sélectionné dans le tableau dishTab*/
@@ -132,6 +144,36 @@ public class PlatController implements Initializable {
             pictureNew.setText(plats.get(selectCell.getRow()).getPicture());
         });
 
+        /* Tri la liste du moins cher au plus cher*/
+        moins.setOnMousePressed( e -> {
+            List<Plat> newplats = plats.stream()
+                    .sorted(Comparator.comparingInt(Plat::getSellPrice)).toList();
+            plats.clear();
+            plats.addAll(newplats);
+        });
+
+        /* Tri la liste du plus cher au moins cher*/
+        plus.setOnMousePressed( e -> {
+            List<Plat> newplats = plats.stream()
+                    .sorted((plat1,plat2)->plat2.getSellPrice()-plat1.getSellPrice())
+                    .toList();
+            plats.clear();
+            plats.addAll(newplats);
+        });
+
+        search.setOnKeyReleased(e -> {
+            if (!search.getText().equals("")){
+                List<Plat> filterPlat = plats.stream()
+                        .filter(Plat -> Plat.getIngredient().contains(search.getText()))
+                        .toList();
+                plats.clear();
+                plats.addAll(filterPlat);
+            } else {
+                plats.clear();
+                plats.addAll(saveplats);
+            }
+        });
+
         /* Supprime le Plat sélectionné dans le tableau dishTab de la liste plats */
         delPlatButton.setOnMousePressed( e -> {
             TablePosition selectCellSupr = dishTab.getSelectionModel().getSelectedCells().get(0);
@@ -142,18 +184,23 @@ public class PlatController implements Initializable {
             } catch (Exception ex) {
                 System.out.println("Echec: ligne non supprimée.");
             }
-            clearForm();
+            clearFormAndSum(plats,saveplats);
         });
     }
 
-    /* Efface le contenu des champs du formulaire
+    /* Efface le contenu des champs du formulaire et recalcule la somme des SellPrices de tout les plats
      * Utiliser lors de l'ajout et la suppresion de Plat */
-    public void clearForm() {
+    public void clearFormAndSum(ObservableList<Plat> liste, ObservableList<Plat> saveliste) {
+        sum.setText(liste.stream()
+                .map(Plat::getSellPrice)
+                .reduce(0, Integer::sum)+"€ 1xtous les plats");
         nameNew.clear();
         descrNew.clear();
         sellNew.clear();
         preparedNew.clear();
         ingredientNew.clear();
         pictureNew.clear();
+        saveliste.clear();
+        saveliste.addAll(liste);
     }
 }
