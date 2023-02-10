@@ -61,12 +61,14 @@ public class FinancialReportController implements Initializable {
         ArrayList<Object> plats = new ArrayList<Object>();
         JSONArray arrayCommandes = new JSONArray(jsonCommandes);
         for (int v = 0; v < arrayCommandes.length(); v++) {
+            // Récupération des infos du plat sous forme de tableau
             var arrayPlat = arrayCommandes.getJSONObject(v).getJSONArray("plat").get(0).toString().replace("{", "").replace("}", "").split(", ");
             Arrays.stream(arrayPlat).forEach(
                     infoPlat -> {
-                        int sellPrice = infoPlat.indexOf(",\"preparationPrice\"");
-                        int p = infoPlat.indexOf("\"sellPrice\":") + 12;
-                        int provisonarySellPrice = Integer.parseInt(infoPlat.substring(p, sellPrice));
+                        // Récupération des valeur des prix à partir des index
+                        int sellPriceEnd = infoPlat.indexOf(",\"preparationPrice\"");
+                        int sellPriceBegin = infoPlat.indexOf("\"sellPrice\":") + 12;
+                        int provisonarySellPrice = Integer.parseInt(infoPlat.substring(sellPriceBegin, sellPriceEnd));
                         this.sell +=provisonarySellPrice;
                         int prepPrice = infoPlat.indexOf(",\"picture\":");
                         int lastChar = infoPlat.indexOf(",\"preparationPrice\"") + 20;
