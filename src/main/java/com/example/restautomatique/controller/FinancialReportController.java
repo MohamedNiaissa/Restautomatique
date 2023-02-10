@@ -57,83 +57,24 @@ public class FinancialReportController implements Initializable {
             System.out.println("Fichier JSON n'existe pas encore. Création du fichier...");
         }
 
-        String guess = "sellPrice";
-        System.out.println(jsonCommandes.indexOf("name"));
-        System.out.println(jsonCommandes.charAt(85));
-
-        int index = jsonCommandes.indexOf(guess);
-        while (index >= 0) {
-            System.out.println(index);
-            index = jsonCommandes.indexOf(guess, index + 1);
-        }
 
         ArrayList<Object> plats = new ArrayList<Object>();
         JSONArray arrayCommandes = new JSONArray(jsonCommandes);
-        int sellPriceValue = 0;
         for (int v = 0; v < arrayCommandes.length(); v++) {
             var arrayPlat = arrayCommandes.getJSONObject(v).getJSONArray("plat").get(0).toString().replace("{", "").replace("}", "").split(", ");
-            System.out.println(arrayCommandes.getJSONObject(v).getJSONArray("plat"));
-
-            for (int i = 0; i < arrayPlat.length; i++) {
-               //  System.out.println(arrayPlat[i]);
-                int sellPrice = arrayPlat[i].indexOf(",\"preparationPrice\"");
-                int p = arrayPlat[i].indexOf("\"sellPrice\":") + 12;
-               // System.out.println(sellPrice);
-
-                //System.out.println(arrayPlat[i].substring(p, sellPrice));
-                int provisonarySellPrice = Integer.parseInt(arrayPlat[i].substring(p, sellPrice));
-
-                this.sell +=provisonarySellPrice;
-
-                int prepPrice = arrayPlat[i].indexOf(",\"picture\":");
-                int lastChar = arrayPlat[i].indexOf(",\"preparationPrice\"") + 20;
-
-               //  System.out.println(arrayPlat[i].substring(lastChar, prepPrice));
-
-                this.preparationPrice += Integer.parseInt(arrayPlat[i].substring(lastChar, prepPrice));
-
-            }
-
-        //    System.out.println(sellPriceValue);
-
-           // JSONObject objetCommandes = arrayCommandes.getJSONObject(v);
-
-        /*    for (int j = 0; j < objetCommandes.getJSONArray("plat").length(); j++) {
-                plats.add(objetCommandes.getJSONArray("plat").get(j));
-            }*/
-        }
-       // List<String> list = new ArrayList<String>();
-
-  /*      for (int i = 0; i < plats.size(); i++) {
-            System.out.println(plats.get(i));
-            JSONObject obj = new JSONObject(plats);
-            System.out.println(obj);
-
-            JSONArray array = obj.getJSONArray("name");
-            for(int k = 0 ; k < array.length() ; k++){
-                plats.add(array.getJSONObject(k).getString("name"));
-            }
+            Arrays.stream(arrayPlat).forEach(
+                    infoPlat -> {
+                        int sellPrice = infoPlat.indexOf(",\"preparationPrice\"");
+                        int p = infoPlat.indexOf("\"sellPrice\":") + 12;
+                        int provisonarySellPrice = Integer.parseInt(infoPlat.substring(p, sellPrice));
+                        this.sell +=provisonarySellPrice;
+                        int prepPrice = infoPlat.indexOf(",\"picture\":");
+                        int lastChar = infoPlat.indexOf(",\"preparationPrice\"") + 20;
+                        this.preparationPrice += Integer.parseInt(infoPlat.substring(lastChar, prepPrice));
+                    }
+            );
         }
 
-        System.out.println(plats);
-
-        String jsonPlats = "[]";
-        try {
-            jsonPlats = new String(Files.readAllBytes(Paths.get(path + "plat.json")));
-        } catch (IOException exception) {
-            System.out.println("Fichier JSON n'existe pas encore. Création du fichier...");
-        }
-
-        JSONArray arrayPlats = new JSONArray(jsonPlats);
-        for (int j = 0; j < plats.size(); j++) {
-            for (int o = 0; o < arrayPlats.length(); o++) {
-                JSONObject objetPlats = arrayPlats.getJSONObject(o);
-                if (plats.get(j).equals(objetPlats.getString("name"))) {
-                    this.sell += objetPlats.getInt("sellPrice");
-                    this.preparationPrice += objetPlats.getInt("preparationPrice");
-                }
-            }
-        }*/
         recettes.setText(Integer.toString(this.sell - this.preparationPrice) + " €");
         depenses.setText(Integer.toString(preparationPrice)+ " €");
 
