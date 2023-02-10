@@ -7,6 +7,15 @@ public class Plat {
     private int preparationPrice;
     private String picture;
 
+    /**
+     * Les plats de la carte du restaurant.
+     * @param name Le nom du plat
+     * @param description La description du plat
+     * @param sellPrice Le prix de revente du plat
+     * @param preparationPrice Le coût de préparation du plat
+     * @param picture Le lien de la photo du plat
+     * @param ingredient Les ingrédients qui composent le plat
+     */
     public Plat(String name, String description, int sellPrice, int preparationPrice, String picture, String ingredient) {
         this.name = name;
         this.description = description;
