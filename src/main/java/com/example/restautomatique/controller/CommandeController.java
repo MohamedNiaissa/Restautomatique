@@ -35,13 +35,15 @@ import org.json.*;
 public class CommandeController implements Initializable {
 
     @FXML
-    private TableView<Commande> tableCommande;
+    private TableView<Commande> tableauCommande;
     @FXML
     private TableColumn<Commande, String> columnTable;
     @FXML
     private TableColumn<Commande, String> columnPlats;
     @FXML
     private TableColumn<Commande, String> columnDate;
+    @FXML
+    private TableColumn<Commande, String> columnStatus;
 
     @FXML
     private ListView listPlats;
@@ -52,6 +54,12 @@ public class CommandeController implements Initializable {
     private Button btnAdd;
     @FXML
     private Button btnDelete;
+    @FXML
+    private Button btnStatusCancel;
+    @FXML
+    private Button btnStatusAtt;
+    @FXML
+    private Button btnStatusPrep;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -147,7 +155,8 @@ public class CommandeController implements Initializable {
             Commande commande = new Commande(
                     listeDePlats,
                     tableDeLaCommande,
-                    objetCommandes.getString("date")
+                    objetCommandes.getString("date"),
+                    objetCommandes.getString("status")
             );
             commandesModels.add(commande);
         }
@@ -156,7 +165,9 @@ public class CommandeController implements Initializable {
         columnPlats.setCellValueFactory(new PropertyValueFactory<Commande, String>("plat"));
         columnTable.setCellValueFactory(new PropertyValueFactory<Commande, String>("table"));
         columnDate.setCellValueFactory(new PropertyValueFactory<Commande, String>("creationDate"));
-        tableCommande.setItems(commandesModels);
+        columnStatus.setCellValueFactory(new PropertyValueFactory<Commande, String>("status"));
+        tableauCommande.setItems(commandesModels);
+        System.out.println(commandesModels);
 
 
         //Si le formulaire est validé, on ajoute les valeurs dans le tableau et le JSON
@@ -176,7 +187,7 @@ public class CommandeController implements Initializable {
             Table selectedTable2 = new Table(selectedTable1.getSize(),selectedTable1.getEmplacement(),selectedTable1.getStatus());
             System.out.println(selectedTable2);
 
-            Commande new_commande = new Commande(selectedPlats,selectedTable2,"");
+            Commande new_commande = new Commande(selectedPlats,selectedTable2,"","En attente");
             commandesModels.add(new_commande);
 
             //On crée un objet Json
@@ -184,6 +195,7 @@ public class CommandeController implements Initializable {
             commandeJson.put("plat",selectedPlats);
             commandeJson.put("table",selectedTable2);
             commandeJson.put("date",LocalDateTime.now());
+            commandeJson.put("status","En attente");
 
             //On réutilise l'array Json à partir de ce qui existe déjà avec le nouvel objet, et on crée/update le fichier
             arrayCommandes.put(commandeJson);
@@ -194,9 +206,9 @@ public class CommandeController implements Initializable {
             }
         });
 
-        //On supprime la ligne de l'employé dans le tableau, dans l'obsList et le JSON.
+        //On supprime le status de la commande dans le tableau, dans l'obsList et le JSON.
         btnDelete.setOnMousePressed(actionEvent -> {
-            TablePosition selectCellSupr = tableCommande.getSelectionModel().getSelectedCells().get(0);
+            TablePosition selectCellSupr = tableauCommande.getSelectionModel().getSelectedCells().get(0);
             commandesModels.remove(selectCellSupr.getRow());
             arrayCommandes.remove(selectCellSupr.getRow());
             try (PrintWriter out = new PrintWriter(new FileWriter(path+"commande.json"))) {
@@ -205,5 +217,60 @@ public class CommandeController implements Initializable {
                 System.out.println("Echec: ligne non supprimée.");
             }
         });
+
+        //On change le status de la commande dans le tableau, dans l'obsList et le JSON, en "En attente".
+        btnStatusAtt.setOnMousePressed(actionEvent -> {
+            TablePosition selectCellStatAtt = tableauCommande.getSelectionModel().getSelectedCells().get(0);
+            Commande commandeSelect = new Commande(
+                    commandesModels.get(selectCellStatAtt.getRow()).getPlat(),
+                    commandesModels.get(selectCellStatAtt.getRow()).getTable(),
+                    commandesModels.get(selectCellStatAtt.getRow()).getCreationDate(),
+                    "En attente"
+            );
+            commandesModels.set(selectCellStatAtt.getRow(), commandeSelect);
+            arrayCommandes.put(selectCellStatAtt.getRow(), commandeSelect);
+            try (PrintWriter out = new PrintWriter(new FileWriter(path+"commande.json"))) {
+                out.write(arrayCommandes.toString());
+            } catch (Exception e) {
+                System.out.println("Echec: status non changé.");
+            }
+        });
+
+        //On change le status de la commande dans le tableau, dans l'obsList et le JSON, en "Préparée".
+        btnStatusPrep.setOnMousePressed(actionEvent -> {
+            TablePosition selectCellStatAtt = tableauCommande.getSelectionModel().getSelectedCells().get(0);
+            Commande commandeSelect = new Commande(
+                    commandesModels.get(selectCellStatAtt.getRow()).getPlat(),
+                    commandesModels.get(selectCellStatAtt.getRow()).getTable(),
+                    commandesModels.get(selectCellStatAtt.getRow()).getCreationDate(),
+                    "Préparée"
+            );
+            commandesModels.set(selectCellStatAtt.getRow(), commandeSelect);
+            arrayCommandes.put(selectCellStatAtt.getRow(), commandeSelect);
+            try (PrintWriter out = new PrintWriter(new FileWriter(path+"commande.json"))) {
+                out.write(arrayCommandes.toString());
+            } catch (Exception e) {
+                System.out.println("Echec: status non changé.");
+            }
+        });
+
+        //On change le status de la commande dans le tableau, dans l'obsList et le JSON, en "Annulée".
+        btnStatusCancel.setOnMousePressed(actionEvent -> {
+            TablePosition selectCellStatAtt = tableauCommande.getSelectionModel().getSelectedCells().get(0);
+            Commande commandeSelect = new Commande(
+                    commandesModels.get(selectCellStatAtt.getRow()).getPlat(),
+                    commandesModels.get(selectCellStatAtt.getRow()).getTable(),
+                    commandesModels.get(selectCellStatAtt.getRow()).getCreationDate(),
+                    "Annulée"
+            );
+            commandesModels.set(selectCellStatAtt.getRow(), commandeSelect);
+            arrayCommandes.put(selectCellStatAtt.getRow(), commandeSelect);
+            try (PrintWriter out = new PrintWriter(new FileWriter(path+"commande.json"))) {
+                out.write(arrayCommandes.toString());
+            } catch (Exception e) {
+                System.out.println("Echec: status non changé.");
+            }
+        });
+
     }
 }
