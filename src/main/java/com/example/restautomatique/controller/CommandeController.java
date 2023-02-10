@@ -16,14 +16,16 @@ import org.json.JSONObject;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import static java.lang.Integer.parseInt;
 import org.json.*;
@@ -40,9 +42,9 @@ public class CommandeController implements Initializable {
     private TableColumn<Commande, String> columnDate;
 
     @FXML
-    private TextField fieldTable;
+    private ListView listPlats;
     @FXML
-    private TextField fieldPlats;
+    private ChoiceBox boxTable;
 
     @FXML
     private Button btnAdd;
@@ -51,10 +53,52 @@ public class CommandeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        //Pour chaque ligne dans JSON, on crée un objet
         ObservableList<Commande> commandesModels = FXCollections.observableArrayList();
+        ArrayList<Plat> platsModels = new ArrayList<Plat>();
+        ArrayList<Table> tablesModels = new ArrayList<Table>();
         String path = "src/main/resources/com/example/restautomatique/Fichiers_JSON/";
 
-        //On récupère le fichier JSON actuel et on le stocke (si il existe)
+        String jsonTables = "[]";
+        try {
+            jsonTables = new String(Files.readAllBytes(Paths.get(path + "table.json")));
+        } catch (IOException e) {
+            System.out.println("Fichier JSON n'existe pas encore. Création du fichier...");
+        }
+        JSONArray arrayTables = new JSONArray(jsonTables);
+        for (int i = 0; i < arrayTables.length(); i++) {
+            JSONObject objetTables = arrayTables.getJSONObject(i);
+            Table table = new Table(
+                    objetTables.getString("emplacement"),
+                    objetTables.getString("size"),
+                    objetTables.getString("status")
+            );
+            tablesModels.add(table);
+            boxTable.getItems().add(table.getEmplacement());
+        }
+
+        listPlats.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        String jsonPlats = "[]";
+        try {
+            jsonPlats = new String(Files.readAllBytes(Paths.get(path + "plat.json")));
+        } catch (IOException e) {
+            System.out.println("Fichier JSON n'existe pas encore. Création du fichier...");
+        }
+        JSONArray arrayPlats = new JSONArray(jsonPlats);
+        for (int i = 0; i < arrayPlats.length(); i++) {
+            JSONObject objetPlats = arrayPlats.getJSONObject(i);
+            Plat plat = new Plat(
+                    objetPlats.getString("name"),
+                    objetPlats.getString("description"),
+                    objetPlats.getInt("sellPrice"),
+                    objetPlats.getInt("preparationPrice"),
+                    objetPlats.getString("picture"),
+                    objetPlats.getString("ingredient")
+            );
+            platsModels.add(plat);
+            listPlats.getItems().add(plat.getName());
+        }
+
         String jsonCommandes = "[]";
         try {
             jsonCommandes = new String(Files.readAllBytes(Paths.get(path + "commande.json")));
@@ -62,27 +106,22 @@ public class CommandeController implements Initializable {
             System.out.println("Fichier JSON n'existe pas encore. Création du fichier...");
         }
 
-        //DONC ingredients = liste d'ingredients, plats = liste de plats, plat = 1 plat de pates, table = obj table
-
-        ArrayList<Plat> plats = new ArrayList<Plat>();
-
-        ArrayList<String> ingredients = new ArrayList<String>();
-
-        Plat plat1 = new Plat("pates", "jsp", 10, 8, "non", "ingredients");
-        plats.add(plat1);
-
-        Table table = new Table("grande","arriere","");
-
         //On ajoute les valeurs du JSON à l'observable list
         JSONArray arrayCommandes = new JSONArray(jsonCommandes);
         for (int i = 0; i < arrayCommandes.length(); i++) {
-            JSONObject objetCommandes = arrayCommandes.getJSONObject(i);
-            Commande commande = new Commande(
-                    plats,
-                    table,
-                    objetCommandes.getString("date")
-            );
-            commandesModels.add(commande);
+            //JSONObject objetCommandes = arrayCommandes.getJSONObject(i);
+            //JSONArray testtt = objetCommandes.getJSONArray("plat");
+            //ArrayList<Plat> test2 = new ArrayList<Plat>();
+            //for (Object plat : testtt) {
+            //    Plat platObjet = new Plat(plat);
+            //    System.out.println(plat);
+            //}
+            //Commande commande = new Commande(
+                    //objetCommandes.getJSONArray("plat"),
+                    //objetCommandes.getJSONArray("table"),
+                    //objetCommandes.getString("date")
+            //);
+            //commandesModels.add(commande);
         }
 
         //On remplis les cellules du tableau principal
@@ -91,20 +130,33 @@ public class CommandeController implements Initializable {
         columnDate.setCellValueFactory(new PropertyValueFactory<Commande, String>("creationDate"));
         tableCommande.setItems(commandesModels);
 
+
         //Si le formulaire est validé, on ajoute les valeurs dans le tableau et le JSON
         btnAdd.setOnMousePressed( actionEvent -> {
 
-            Commande new_commande = new Commande(plats,table,"");
+            ObservableList<String> selectedPlatsObs =  listPlats.getSelectionModel().getSelectedItems();
+            //System.out.println(selectedPlatsObs);
+            ArrayList<Plat> selectedPlats = new ArrayList<Plat>();
+
+            for(String plat : selectedPlatsObs){
+                List<Plat> test = platsModels.stream().filter(plat1 -> plat1.getName() == plat).collect(Collectors.toList());
+                System.out.println("selected item: " + test.get(0));
+                selectedPlats.add(test.get(0));
+            }
+
+            Table selectedTable = tablesModels.get(boxTable.getSelectionModel().getSelectedIndex());
+
+            Commande new_commande = new Commande(selectedPlats,selectedTable,"");
             commandesModels.add(new_commande);
 
             //On crée un objet Json
-            JSONObject employeJson = new JSONObject();
-            employeJson.put("plat",plats);
-            employeJson.put("table",table);
-            employeJson.put("date",LocalDateTime.now());
+            JSONObject commandeJson = new JSONObject();
+            commandeJson.put("plat",selectedPlats);
+            commandeJson.put("table",selectedTable);
+            commandeJson.put("date",LocalDateTime.now());
 
             //On réutilise l'array Json à partir de ce qui existe déjà avec le nouvel objet, et on crée/update le fichier
-            arrayCommandes.put(employeJson);
+            arrayCommandes.put(commandeJson);
             try (PrintWriter out = new PrintWriter(new FileWriter(path+"commande.json"))) {
                 out.write(arrayCommandes.toString());
             } catch (Exception e) {
